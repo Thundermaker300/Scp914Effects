@@ -19,15 +19,10 @@ namespace Scp914Effects
             List<string> Effects = API.GetEffects(ev.KnobSetting);
             foreach (Player Ply in ev.Players)
             {
-                Log.Debug(Ply.Nickname);
-                Log.Debug(API.GetChance(ev.KnobSetting));
                 if (API.GetChance(ev.KnobSetting))
                 {
-                    Log.Debug("CHANCE: TRUE");
-                    Log.Debug(Effects.Count);
                     foreach (string Effect in Effects)
                     {
-                        Log.Debug(Effect);
                         List<string> EffectData = Effect.Split(char.Parse(":")).ToList();
                         string EffectName = EffectData[0].ToLower();
                         EffectData.RemoveAt(0);
