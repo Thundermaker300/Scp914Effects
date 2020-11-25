@@ -15,7 +15,7 @@ More settings are planned.
 Note: Values in <> are parameters, and should be changed in the configs.
 - `ahp:<amount>` - Gives the player the specified amount of AHP (gradually decays over time). This effect will not function for SCP-096.
 - `damage:<amount>` - Deals the specified amount of damage to the player.
-- `dropitems:<amount/*> - Drops the specified amount of items (or `*` to drop all items). If the player is teleported, the items will be dropped at their new location.
+- `dropitems:<amount/*>` - Drops the specified amount of items (or `*` to drop all items). If the player is teleported, the items will be dropped at their new location.
 - `effect:EffectType:duration` - Gives the player the specified effect for the given duration of time. Valid effects listed below.
 - `god:duration` - Gives the player god mode (inability to die) for the specified duration of time.
 - `heal:<amount>` - Opposite of `damage`; heals the player the specified amount of health.
