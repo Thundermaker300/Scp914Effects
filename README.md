@@ -11,12 +11,12 @@ More settings are planned.
 | effect_chance         | Dictionary<Scp914Knob, int>             | 100% for all 5 modes                                                                      | Determines the chance per player that effects can happen on the specified mode.                                                                                                           |
 
 
-## TeleportEffects - Valid Strings
+## Valid effects
 Note: Values in <> are parameters, and should be changed in the configs.
 - `ahp:<amount>` - Gives the player the specified amount of AHP (gradually decays over time). This effect will not function for SCP-096.
 - `damage:<amount>` - Deals the specified amount of damage to the player.
 - `dropitems:<amount/*>` - Drops the specified amount of items (or `*` to drop all items). If the player is teleported, the items will be dropped at their new location.
-- `effect:EffectType:duration` - Gives the player the specified effect for the given duration of time. Valid effects listed below.
+- `effect:EffectType:duration` - Gives the player the specified effect for the given duration of time (eg Amnesia).
 - `god:duration` - Gives the player god mode (inability to die) for the specified duration of time.
 - `heal:<amount>` - Opposite of `damage`; heals the player the specified amount of health.
 - `kill` - Kills the player.
@@ -43,7 +43,7 @@ Note: Case sensitive
 - `Scp93989` - SCP-939-89
 - `Tutorial` - Tutorials
 
-## TeleportRooms - Valid Rooms
+## Valid teleport rooms
 **Light Containment Zone**  
 - `Lcz012` - SCP-012's hallway
 - `Lcz173` - Outside of SCP-173's chamber *WARNING: I've tested this and discovered that it sometimes does teleport out of the map. Would not recommend using this one.*
