@@ -21,19 +21,6 @@ namespace Scp914Effects
 
         public static Dictionary<string, Action<Player, List<string>, Scp914Knob>> Effects = new Dictionary<string, Action<Player, List<string>, Scp914Knob>>
         {
-            ["kill"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) => Ply.Kill(DamageTypes.Wall),
-
-            ["damage"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
-            {
-                bool canParse = float.TryParse(Args[0], out float amount);
-                if (!canParse)
-                {
-                    Log.Error("Damage effect must have a numerical damage amount!");
-                    return;
-                }
-                Ply.Hurt(amount, DamageTypes.Wall, "SCP-914");
-            },
-
             ["ahp"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
             {
                 if (Ply.Role == RoleType.Scp096)
@@ -49,63 +36,15 @@ namespace Scp914Effects
                 Ply.AdrenalineHealth += amount;
             },
 
-            ["heal"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["damage"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
             {
                 bool canParse = float.TryParse(Args[0], out float amount);
                 if (!canParse)
                 {
-                    Log.Error("Heal effect must have a numerical argument!");
+                    Log.Error("Damage effect must have a numerical damage amount!");
                     return;
                 }
-                Ply.Health += amount;
-            },
-
-            ["god"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
-            {
-                bool canParse = float.TryParse(Args[0], out float amount);
-                if (!canParse)
-                {
-                    Log.Error("God effect must have a numerical damage amount!");
-                    return;
-                }
-                Ply.IsGodModeEnabled = true;
-                Timing.CallDelayed(amount, () =>
-                {
-                    Ply.IsGodModeEnabled = false;
-                });
-            },
-
-            ["teleport"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
-            {
-                if (!Plugin.Singleton.Config.TeleportRooms.ContainsKey(KnobSetting))
-                {
-                    Log.Error($"Teleport effect: Rooms for {KnobSetting} setting not configured.");
-                    return;
-                }
-                Scp914Knob setting = Scp914Machine.singleton.knobState;
-                List<RoomType> Rooms = Plugin.Singleton.Config.TeleportRooms[KnobSetting];
-                RoomType ChosenRoomType = Rooms[Rng.Next(Rooms.Count)];
-                Room ChosenRoom = Map.Rooms.FirstOrDefault(r => r.Type == ChosenRoomType);
-                if (!PlayerMovementSync.FindSafePosition(ChosenRoom.Position, out Vector3 SafePos))
-                {
-                    Log.Error($"Teleport effect: Could not find safe area to teleport player in room {ChosenRoomType}.");
-                    return;
-                }
-                Timing.CallDelayed(0.1f, () =>
-                {
-                    Ply.Position = SafePos;
-                });
-            },
-
-            ["effect"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
-            {
-                bool canParse = float.TryParse(Args[1], out float amount);
-                if (!canParse)
-                {
-                    Log.Error("Effect effect must have a valid effect name and a numerical length argument!");
-                    return;
-                }
-                Ply.EnableEffect(Args[0], amount, true);
+                Ply.Hurt(amount, DamageTypes.Wall, "SCP-914");
             },
 
             ["dropitems"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
@@ -133,7 +72,68 @@ namespace Scp914Effects
                 });
             },
 
-            ["setclass"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["effect"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            {
+                bool canParse = float.TryParse(Args[1], out float amount);
+                if (!canParse)
+                {
+                    Log.Error("Effect effect must have a valid effect name and a numerical length argument!");
+                    return;
+                }
+                Ply.EnableEffect(Args[0], amount, true);
+            },
+
+            ["god"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            {
+                bool canParse = float.TryParse(Args[0], out float amount);
+                if (!canParse)
+                {
+                    Log.Error("God effect must have a numerical damage amount!");
+                    return;
+                }
+                Ply.IsGodModeEnabled = true;
+                Timing.CallDelayed(amount, () =>
+                {
+                    Ply.IsGodModeEnabled = false;
+                });
+            },
+
+            ["heal"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            {
+                bool canParse = float.TryParse(Args[0], out float amount);
+                if (!canParse)
+                {
+                    Log.Error("Heal effect must have a numerical argument!");
+                    return;
+                }
+                Ply.Health += amount;
+            },
+
+            ["kill"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) => Ply.Kill(DamageTypes.Wall),
+
+            ["teleport"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            {
+                if (!Plugin.Singleton.Config.TeleportRooms.ContainsKey(KnobSetting))
+                {
+                    Log.Error($"Teleport effect: Rooms for {KnobSetting} setting not configured.");
+                    return;
+                }
+                Scp914Knob setting = Scp914Machine.singleton.knobState;
+                List<RoomType> Rooms = Plugin.Singleton.Config.TeleportRooms[KnobSetting];
+                RoomType ChosenRoomType = Rooms[Rng.Next(Rooms.Count)];
+                Room ChosenRoom = Map.Rooms.FirstOrDefault(r => r.Type == ChosenRoomType);
+                if (!PlayerMovementSync.FindSafePosition(ChosenRoom.Position, out Vector3 SafePos))
+                {
+                    Log.Error($"Teleport effect: Could not find safe area to teleport player in room {ChosenRoomType}.");
+                    return;
+                }
+                Timing.CallDelayed(0.1f, () =>
+                {
+                    Ply.Position = SafePos;
+                });
+            },
+
+            ["setrole"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
             {
                 if (!Enum.TryParse(Args[0], true, out RoleType RoleOriginal))
                 {
