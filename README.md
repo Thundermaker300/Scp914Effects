@@ -1,14 +1,14 @@
-## SCP-914 Teleportation
-Ever get stuck in SCP-914 with three SCPs outside, waiting for you to leave just so you can be instantly murdered? No longer! This plugin allows you to put yourself through SCP-914 on a specific setting and escape.
+## SCP-914 Effects
+Adds realism (in some cases) and fun to SCP-914 by adding effects to users who are "upgraded" inside of SCP-914.
 
 ## Configurations
 More settings are planned.
 | Setting               | Type                                    | Default                                                                                   | Description                                                                                                                                                                               |
 |-----------------------|-----------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IsEnabled             | boolean                                 | true                                                                                      | Enables the plugin.                                                                                                                                                                       |
-| Effects               | Dictionary<Scp914Knob, List<string>>    | Empty lists for all 5 modes                                                               | Sets the effects to occur for each mode. Effects are listed below.                                                                                                                        |
-| TeleportRooms         | Dictionary<Scp914Knob, List<RoomType>>  | Empty lists for all 5 modes                                                               | Determines which rooms can be teleported to for each mode that have the `teleport` effect. Valid rooms can be found below.                                                                |
-| EffectChance          | Dictionary<Scp914Knob, int>             | 100% for all 5 modes                                                                      | Determines the chance per player that effects can happen on the specified mode.                                                                                                           |
+| is_enabled            | boolean                                 | true                                                                                      | Enables the plugin.                                                                                                                                                                       |
+| effects               | Dictionary<Scp914Knob, List<string>>    | Empty lists for all 5 modes                                                               | Sets the effects to occur for each mode. Effects are listed below.                                                                                                                        |
+| teleport_rooms        | Dictionary<Scp914Knob, List<RoomType>>  | Empty lists for all 5 modes                                                               | Determines which rooms can be teleported to for each mode that have the `teleport` effect. Valid rooms can be found below.                                                                |
+| effect_chance         | Dictionary<Scp914Knob, int>             | 100% for all 5 modes                                                                      | Determines the chance per player that effects can happen on the specified mode.                                                                                                           |
 
 
 ## TeleportEffects - Valid Strings
