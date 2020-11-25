@@ -46,7 +46,7 @@ namespace Scp914Effects
                     return;
                 }
                 Args.RemoveRange(0, 2);
-                string message = string.Join(" ", Args).Replace("{name}", (Ply.DisplayNickname != null ? Ply.DisplayNickname : Ply.Nickname)).Replace("{role}", $"<color={Ply.RoleColor}>{Plugin.Singleton.Config.RoleStrings[Ply.Role]}</color>");
+                string message = string.Join(" ", Args).Replace("{name}", (Ply.DisplayNickname != null ? Ply.DisplayNickname : Ply.Nickname)).Replace("{class}", $"<color={Ply.RoleColor.ToHex()}>{Plugin.Singleton.Config.RoleStrings[Ply.Role]}</color>");
                 if (type == "*")
                 {
                     Map.Broadcast(duration, message);

@@ -9,19 +9,22 @@ More settings are planned.
 | effects               | Dictionary<Scp914Knob, List<string>>    | Empty lists for all 5 modes                                                               | Sets the effects to occur for each mode. Effects are listed below.                                                                                                                        |
 | teleport_rooms        | Dictionary<Scp914Knob, List<RoomType>>  | Empty lists for all 5 modes                                                               | Determines which rooms can be teleported to for each mode that have the `teleport` effect. Valid rooms can be found below.                                                                |
 | effect_chance         | Dictionary<Scp914Knob, int>             | 100% for all 5 modes                                                                      | Determines the chance per player that effects can happen on the specified mode.                                                                                                           |
+| role_strings          | Dictionary<RoleType, string>            | Default names for every class                                                             | Determines the string to show in place of `{role}` for each class on the broadcast command.
 
 
 ## Valid effects
 Note: Values in <> are parameters, and should be changed in the configs.
 - `ahp:<amount>` - Gives the player the specified amount of AHP (gradually decays over time). This effect will not function for SCP-096.
+- `broadcast:<type>:<duration>:<message>` - Displays a broadcast with duration seconds. Add `{name}` or `{class}` in the message to replace those with the player's name or class.
 - `damage:<amount>` - Deals the specified amount of damage to the player.
 - `dropitems:<amount/*>` - Drops the specified amount of items (or `*` to drop all items). If the player is teleported, the items will be dropped at their new location.
-- `effect:EffectType:duration` - Gives the player the specified effect for the given duration of time (eg Amnesia).
-- `god:duration` - Gives the player god mode (inability to die) for the specified duration of time.
+- `effect:<EffectType>:<duration>` - Gives the player the specified effect for the given duration of time (eg Amnesia).
+- `god:<duration>` - Gives the player god mode (inability to die) for the specified duration of time.
 - `heal:<amount>` - Opposite of `damage`; heals the player the specified amount of health.
 - `kill` - Kills the player.
 - `teleport` - Teleports the player to one of the rooms described in the `teleport_rooms` config.
-- `setrole:original:new` - Changes the player's role from `original` to `new`. Their role must be matching `original`, or else they will not be changed. Valid role list found below.
+- `setrole:<original>:<new>` - Changes the player's role from `original` to `new`. Their role must be matching `original`, or else they will not be changed. Valid role list found below.
+- `stamina:<amount>` - Sets player's stamina to amount.
 - (More soon!)
 
 ## Valid Roles (for setclass effect)
@@ -42,6 +45,19 @@ Note: Case sensitive
 - `Scp93953` - SCP-939-53
 - `Scp93989` - SCP-939-89
 - `Tutorial` - Tutorials
+
+## Valid Types for broadcast
+* `*` - Broadcast to all players
+* `self` - Broadcast to only the player
+* `adminchat` - Broadcasts in admin chat
+* `team.team.team` - Broadcasts to the specified teams (separated by `.`). Teams can be:
+  - `CDP` - Class-D Personnel
+  - `RSC` - Scientists
+  - `MTF` - Guards & MTF
+  - `CHI` - Chaos Insurgency
+  - `SCP` - SCPs
+  - `RIP` - Dead players
+  - `TUT` - Tutorials
 
 ## Valid teleport rooms
 **Light Containment Zone**  
@@ -96,3 +112,48 @@ Note: Case sensitive
 
 **Surface**  
 - `Surface` - Gate A at the surface.
+
+## Examples
+### Teleportation
+The following is a configuration file that will teleport players (50% chance) who enter on 1:1 to a random room in light and inform the SCPs that they have teleported. It will also give the amnesia, blinded, and deafened effects for 3 seconds.
+```yml
+scp914_effects:
+  is_enabled: true
+  effects:
+    Rough: []
+    Coarse: []
+    OneToOne:
+    - teleport
+    - broadcast:SCP:5:{name} has just teleported out of SCP-914! They are a {role}.
+    - effect:Amnesia:3
+    - effect:Blinded:3
+    - effect:Deafened:3
+    Fine: []
+    VeryFine: []
+  teleport_rooms:
+    Rough: []
+    Coarse: []
+    OneToOne:
+    - Lcz012
+    - Lcz914
+    - LczAirlock
+    - LczArmory
+    - LczCafe
+    - LczChkpA
+    - LczChkpB
+    - LczClassDSpawn
+    - LczCrossing
+    - LczCurve
+    - LczGlassBox
+    - LczStraight
+    - LczCross
+    - LczToilets
+    Fine: []
+    VeryFine: []
+  effect_chance:
+    Rough: 100
+    Coarse: 100
+    OneToOne: 50
+    Fine: 100
+    VeryFine: 100
+```
