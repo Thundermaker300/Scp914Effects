@@ -115,7 +115,7 @@ Note: Case sensitive
 
 ## Examples
 ### Teleportation
-The following is a configuration file that will teleport players (50% chance) who enter on 1:1 to a random room in light and inform the SCPs that they have teleported. It will also give the amnesia, blinded, and deafened effects for 3 seconds.
+The following is a configuration file that will teleport players (50% chance) who enter on 1:1 to a random room in light and inform the SCPs and Spectators that they have teleported. It will also give the amnesia, blinded, and deafened effects for 3 seconds.
 ```yml
 scp914_effects:
   is_enabled: true
@@ -124,7 +124,7 @@ scp914_effects:
     Coarse: []
     OneToOne:
     - teleport
-    - broadcast:SCP:5:{name} has just teleported out of SCP-914! They are a {role}.
+    - broadcast:SCP.RIP:5:{name} has just teleported out of SCP-914! They are a {role}.
     - effect:Amnesia:3
     - effect:Blinded:3
     - effect:Deafened:3
