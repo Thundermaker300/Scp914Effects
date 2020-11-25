@@ -36,6 +36,47 @@ namespace Scp914Effects
                 Ply.AdrenalineHealth += amount;
             },
 
+            ["broadcast"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            {
+                bool canParse = ushort.TryParse(Args[1], out ushort duration);
+                string type = Args[0];
+                if (!canParse)
+                {
+                    Log.Error("Broadcast effect 2nd argument must be a numerical argument!");
+                    return;
+                }
+                Args.RemoveRange(0, 2);
+                string message = string.Join(" ", Args).Replace("{name}", (Ply.DisplayNickname != null ? Ply.DisplayNickname : Ply.Nickname)).Replace("{role}", $"<color={Ply.RoleColor}>{Plugin.Singleton.Config.RoleStrings[Ply.Role]}</color>");
+                if (type == "*")
+                {
+                    Map.Broadcast(duration, message);
+                }
+                else if (type == "adminchat")
+                {
+                    Map.Broadcast(duration, message, Broadcast.BroadcastFlags.AdminChat);
+                }
+                else if (type == "self")
+                {
+                    Ply.Broadcast(duration, message);
+                }
+                else
+                {
+                    string[] teams = type.Split(char.Parse("."));
+                    foreach(string teamStr in teams)
+                    {
+                        if (!Enum.TryParse(teamStr, true, out Team team))
+                        {
+                            Log.Warn($"Broadcast effect: {teamStr} is not a valid team. Skipping.");
+                            continue;
+                        }
+                        foreach (Player TeamPly in Player.Get(team))
+                        {
+                            TeamPly.Broadcast(duration, message);
+                        }
+                    }
+                }
+            },
+
             ["damage"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
             {
                 bool canParse = float.TryParse(Args[0], out float amount);
@@ -111,6 +152,35 @@ namespace Scp914Effects
 
             ["kill"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) => Ply.Kill(DamageTypes.Wall),
 
+            ["setrole"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            {
+                if (!Enum.TryParse(Args[0], true, out RoleType RoleOriginal))
+                {
+                    Log.Error("Setclass effect must have a valid original role type!");
+                    return;
+                }
+                if (!Enum.TryParse(Args[1], true, out RoleType RoleNew))
+                {
+                    Log.Error("Setclass effect must have a valid new role type!");
+                    return;
+                }
+                if (Ply.Role == RoleOriginal)
+                {
+                    Ply.SetRole(RoleNew, true, false);
+                }
+            },
+
+            ["stamina"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            {
+                bool canParse = float.TryParse(Args[0], out float amount);
+                if (!canParse)
+                {
+                    Log.Error("Stamina effect must have a numerical argument!");
+                    return;
+                }
+                Ply.Stamina.RemainingStamina = amount;
+            },
+
             ["teleport"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
             {
                 if (!Plugin.Singleton.Config.TeleportRooms.ContainsKey(KnobSetting))
@@ -132,31 +202,13 @@ namespace Scp914Effects
                     Ply.Position = SafePos;
                 });
             },
-
-            ["setrole"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
-            {
-                if (!Enum.TryParse(Args[0], true, out RoleType RoleOriginal))
-                {
-                    Log.Error("Setclass effect must have a valid original role type!");
-                    return;
-                }
-                if (!Enum.TryParse(Args[1], true, out RoleType RoleNew))
-                {
-                    Log.Error("Setclass effect must have a valid new role type!");
-                    return;
-                }
-                if (Ply.Role == RoleOriginal)
-                {
-                    Ply.SetRole(RoleNew, true, false);
-                }
-            }
         };
 
         public static void EnableEffect(Player Ply, Scp914Knob setting, string name, List<string> args)
         {
             try
             {
-                Action<Player, List<string>, Scp914Knob> Info = Effects[name];
+                var Info = Effects[name];
                 Info(Ply, args, setting);
             }
             catch (KeyNotFoundException)
