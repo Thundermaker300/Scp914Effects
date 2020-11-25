@@ -36,6 +36,10 @@ namespace Scp914Effects
 
             ["ahp"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
             {
+                if (Ply.Role == RoleType.Scp096)
+                {
+                    return;
+                }
                 bool canParse = float.TryParse(Args[0], out float amount);
                 if (!canParse)
                 {
