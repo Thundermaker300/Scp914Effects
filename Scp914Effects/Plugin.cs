@@ -38,7 +38,7 @@ namespace Scp914Effects
 
         public override string Name => "Scp914Effects";
         public override string Author => "Thunder";
-        public override Version Version => new Version(1, 0, 4);
+        public override Version Version => new Version(1, 0, 3);
         public override Version RequiredExiledVersion => new Version(2, 8, 0);
         public override PluginPriority Priority => PluginPriority.High;
     }
