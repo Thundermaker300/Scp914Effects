@@ -33,7 +33,7 @@ namespace Scp914Effects
                     Log.Error("AHP effect must have a numerical argument!");
                     return;
                 }
-                Ply.AdrenalineHealth += amount;
+                Ply.ArtificialHealth += amount;
             },
 
             ["broadcast"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>

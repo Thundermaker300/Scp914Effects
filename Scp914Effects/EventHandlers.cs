@@ -19,14 +19,31 @@ namespace Scp914Effects
             List<string> Effects = API.GetEffects(ev.KnobSetting);
             foreach (Player Ply in ev.Players)
             {
-                if (API.GetChance(ev.KnobSetting))
+                if (_plugin.Config.AlwaysApplyEffects)
                 {
                     foreach (string Effect in Effects)
                     {
                         List<string> EffectData = Effect.Split(char.Parse(":")).ToList();
                         string EffectName = EffectData[0].ToLower();
+
+                        if (EffectName == "teleport" && !API.GetChance(ev.KnobSetting))
+                            return;
+
                         EffectData.RemoveAt(0);
                         API.EnableEffect(Ply, ev.KnobSetting, EffectName, EffectData.Select(str => str.ToLower()).ToList());
+                    }
+                }
+                else
+                {
+                    if (API.GetChance(ev.KnobSetting))
+                    {
+                        foreach (string Effect in Effects)
+                        {
+                            List<string> EffectData = Effect.Split(char.Parse(":")).ToList();
+                            string EffectName = EffectData[0].ToLower();
+                            EffectData.RemoveAt(0);
+                            API.EnableEffect(Ply, ev.KnobSetting, EffectName, EffectData.Select(str => str.ToLower()).ToList());
+                        }
                     }
                 }
             }

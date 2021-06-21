@@ -14,6 +14,8 @@ namespace Scp914Effects
     public class Config : IConfig
     {
         public bool IsEnabled { get; set; } = true;
+        [Description("If set to true, all effects will always be enabled, except for teleport which will still use the chances.")]
+        public bool AlwaysApplyEffects { get; set; } = false;
 
         [Description("Determines the effects to happen on each mode.")]
         public Dictionary<Scp914Knob, List<string>> Effects { get; set; } = new Dictionary<Scp914Knob, List<string>>
