@@ -12,6 +12,8 @@ using UnityEngine;
 using MEC;
 
 using Random = System.Random;
+using InventorySystem;
+using Exiled.API.Features.Items;
 
 namespace Scp914Effects
 {
@@ -19,9 +21,9 @@ namespace Scp914Effects
     {
         private static Random Rng = new Random();
 
-        public static Dictionary<string, Action<Player, List<string>, Scp914Knob>> Effects = new Dictionary<string, Action<Player, List<string>, Scp914Knob>>
+        public static Dictionary<string, Action<Player, List<string>, Scp914KnobSetting>> Effects = new Dictionary<string, Action<Player, List<string>, Scp914KnobSetting>>
         {
-            ["ahp"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["ahp"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 if (Ply.Role == RoleType.Scp096)
                 {
@@ -36,7 +38,7 @@ namespace Scp914Effects
                 Ply.ArtificialHealth += amount;
             },
 
-            ["broadcast"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["broadcast"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 bool canParse = ushort.TryParse(Args[1], out ushort duration);
                 string type = Args[0];
@@ -77,7 +79,7 @@ namespace Scp914Effects
                 }
             },
 
-            ["damage"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["damage"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 bool canParse = float.TryParse(Args[0], out float amount);
                 if (!canParse)
@@ -85,10 +87,10 @@ namespace Scp914Effects
                     Log.Error("Damage effect must have a numerical damage amount!");
                     return;
                 }
-                Ply.Hurt(amount, DamageTypes.Wall, "SCP-914");
+                Ply.Hurt("Hurt in SCP-914.", amount);
             },
 
-            ["dropitems"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["dropitems"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 Timing.CallDelayed(0.15f, () => // If the player is teleported, we want dropped items to teleport to their new location
                 {
@@ -106,14 +108,15 @@ namespace Scp914Effects
                         }
                         for (int i = 0; i < amount; i++)
                         {
-                            Inventory.SyncItemInfo Chosen = Ply.Inventory.items[Rng.Next(Ply.Inventory.items.Count)];
-                            Ply.DropItem(Chosen);
+                            
+                            var Chosen = Ply.Inventory.UserInventory.Items.ElementAt(Rng.Next(Ply.Inventory.UserInventory.Items.Count)).Value;
+                            Ply.DropItem(Item.Get(Chosen));
                         }
                     }
                 });
             },
 
-            ["effect"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["effect"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 bool canParse = float.TryParse(Args[1], out float amount);
                 if (!canParse)
@@ -124,7 +127,7 @@ namespace Scp914Effects
                 Ply.EnableEffect(Args[0], amount, true);
             },
 
-            ["god"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["god"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 bool canParse = float.TryParse(Args[0], out float amount);
                 if (!canParse)
@@ -139,7 +142,7 @@ namespace Scp914Effects
                 });
             },
 
-            ["heal"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["heal"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 bool canParse = float.TryParse(Args[0], out float amount);
                 if (!canParse)
@@ -150,9 +153,9 @@ namespace Scp914Effects
                 Ply.Health += amount;
             },
 
-            ["kill"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) => Ply.Kill(DamageTypes.Wall),
+            ["kill"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) => Ply.Kill("Killed in SCP-914."),
 
-            ["setrole"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["setrole"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 if (!Enum.TryParse(Args[0], true, out RoleType RoleOriginal))
                 {
@@ -166,11 +169,11 @@ namespace Scp914Effects
                 }
                 if (Ply.Role == RoleOriginal)
                 {
-                    Ply.SetRole(RoleNew, true, false);
+                    Ply.SetRole(RoleNew, SpawnReason.ForceClass, false);
                 }
             },
 
-            ["stamina"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["stamina"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 bool canParse = float.TryParse(Args[0], out float amount);
                 if (!canParse)
@@ -181,14 +184,14 @@ namespace Scp914Effects
                 Ply.Stamina.RemainingStamina = amount;
             },
 
-            ["teleport"] = (Player Ply, List<string> Args, Scp914Knob KnobSetting) =>
+            ["teleport"] = (Player Ply, List<string> Args, Scp914KnobSetting KnobSetting) =>
             {
                 if (!Plugin.Singleton.Config.TeleportRooms.ContainsKey(KnobSetting))
                 {
                     Log.Error($"Teleport effect: Rooms for {KnobSetting} setting not configured.");
                     return;
                 }
-                Scp914Knob setting = Scp914Machine.singleton.knobState;
+                Scp914KnobSetting setting = Exiled.API.Features.Scp914.KnobStatus;
                 List<RoomType> Rooms = Plugin.Singleton.Config.TeleportRooms[KnobSetting];
                 RoomType ChosenRoomType = Rooms[Rng.Next(Rooms.Count)];
                 Room ChosenRoom = Map.Rooms.FirstOrDefault(r => r.Type == ChosenRoomType);
@@ -204,7 +207,7 @@ namespace Scp914Effects
             },
         };
 
-        public static void EnableEffect(Player Ply, Scp914Knob setting, string name, List<string> args)
+        public static void EnableEffect(Player Ply, Scp914KnobSetting setting, string name, List<string> args)
         {
             try
             {
@@ -217,8 +220,8 @@ namespace Scp914Effects
             }
         }
 
-        public static List<string> GetEffects(Scp914Knob mode) => Plugin.Singleton.Config.Effects[mode];
+        public static List<string> GetEffects(Scp914KnobSetting mode) => Plugin.Singleton.Config.Effects[mode];
 
-        public static bool GetChance(Scp914Knob mode) => Rng.Next(1, 100) <= Plugin.Singleton.Config.EffectChance[mode];
+        public static bool GetChance(Scp914KnobSetting mode) => Rng.Next(1, 100) <= Plugin.Singleton.Config.EffectChance[mode];
     }
 }

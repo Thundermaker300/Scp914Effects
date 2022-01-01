@@ -18,33 +18,33 @@ namespace Scp914Effects
         public bool AlwaysApplyEffects { get; set; } = false;
 
         [Description("Determines the effects to happen on each mode.")]
-        public Dictionary<Scp914Knob, List<string>> Effects { get; set; } = new Dictionary<Scp914Knob, List<string>>
+        public Dictionary<Scp914KnobSetting, List<string>> Effects { get; set; } = new Dictionary<Scp914KnobSetting, List<string>>
         {
-            [Scp914Knob.Rough] = new List<string> { },
-            [Scp914Knob.Coarse] = new List<string> { },
-            [Scp914Knob.OneToOne] = new List<string> { },
-            [Scp914Knob.Fine] = new List<string> { },
-            [Scp914Knob.VeryFine] = new List<string> { },
+            [Scp914KnobSetting.Rough] = new List<string> { },
+            [Scp914KnobSetting.Coarse] = new List<string> { },
+            [Scp914KnobSetting.OneToOne] = new List<string> { },
+            [Scp914KnobSetting.Fine] = new List<string> { },
+            [Scp914KnobSetting.VeryFine] = new List<string> { },
         };
 
         [Description("Determines the rooms to teleport to upon going through SCP-914 on certain modes. This will only affect players if 'teleport' is an effect on the specified mode.")]
-        public Dictionary<Scp914Knob, List<RoomType>> TeleportRooms { get; set; } = new Dictionary<Scp914Knob, List<RoomType>>
+        public Dictionary<Scp914KnobSetting, List<RoomType>> TeleportRooms { get; set; } = new Dictionary<Scp914KnobSetting, List<RoomType>>
         {
-            [Scp914Knob.Rough] = new List<RoomType> { },
-            [Scp914Knob.Coarse] = new List<RoomType> { },
-            [Scp914Knob.OneToOne] = new List<RoomType> { },
-            [Scp914Knob.Fine] = new List<RoomType> { },
-            [Scp914Knob.VeryFine] = new List<RoomType> { },
+            [Scp914KnobSetting.Rough] = new List<RoomType> { },
+            [Scp914KnobSetting.Coarse] = new List<RoomType> { },
+            [Scp914KnobSetting.OneToOne] = new List<RoomType> { },
+            [Scp914KnobSetting.Fine] = new List<RoomType> { },
+            [Scp914KnobSetting.VeryFine] = new List<RoomType> { },
         };
 
         [Description("Determines the chances of each effect to happen on certain SCP-914 modes.")]
-        public Dictionary<Scp914Knob, int> EffectChance { get; set; } = new Dictionary<Scp914Knob, int>
+        public Dictionary<Scp914KnobSetting, int> EffectChance { get; set; } = new Dictionary<Scp914KnobSetting, int>
         {
-            [Scp914Knob.Rough] = 100,
-            [Scp914Knob.Coarse] = 100,
-            [Scp914Knob.OneToOne] = 100,
-            [Scp914Knob.Fine] = 100,
-            [Scp914Knob.VeryFine] = 100,
+            [Scp914KnobSetting.Rough] = 100,
+            [Scp914KnobSetting.Coarse] = 100,
+            [Scp914KnobSetting.OneToOne] = 100,
+            [Scp914KnobSetting.Fine] = 100,
+            [Scp914KnobSetting.VeryFine] = 100,
         };
 
         [Description("Determines the string displayed for each class in the broadcast effect.")]
@@ -53,11 +53,14 @@ namespace Scp914Effects
             [RoleType.ClassD] = "Class-D Personnel",
             [RoleType.Scientist] = "Scientist",
             [RoleType.FacilityGuard] = "Facility Guard",
-            [RoleType.NtfCadet] = "NTF Cadet",
-            [RoleType.NtfLieutenant] = "NTF Lieutenant",
-            [RoleType.NtfScientist] = "NTF Scientist",
-            [RoleType.NtfCommander] = "NTF Commander",
-            [RoleType.ChaosInsurgency] = "Chaos Insurgency",
+            [RoleType.NtfSpecialist] = "NTF Specialist",
+            [RoleType.NtfSergeant] = "NTF Sergeant",
+            [RoleType.NtfPrivate] = "NTF Private",
+            [RoleType.NtfCaptain] = "NTF Captain",
+            [RoleType.ChaosConscript] = "Chaos Conscript",
+            [RoleType.ChaosMarauder] = "Chaos Marauder",
+            [RoleType.ChaosRepressor] = "Chaos Repressor",
+            [RoleType.ChaosRifleman] = "Chaos Rifleman",
             [RoleType.Scp049] = "SCP-049",
             [RoleType.Scp0492] = "SCP-049-2",
             [RoleType.Scp096] = "SCP-096",

@@ -20,7 +20,7 @@ namespace Scp914Effects
             Handler = new EventHandlers(this);
 
             // Events
-            Events.Scp914.UpgradingItems += Handler.OnUpgradingItems;
+            Events.Scp914.UpgradingPlayer += Handler.OnUpgradingPlayer;
 
             base.OnEnabled();
         }
@@ -28,7 +28,7 @@ namespace Scp914Effects
         public override void OnDisabled()
         {
             // Events
-            Events.Scp914.UpgradingItems -= Handler.OnUpgradingItems;
+            Events.Scp914.UpgradingPlayer -= Handler.OnUpgradingPlayer;
 
             // Instances
             Handler = null;
@@ -39,7 +39,7 @@ namespace Scp914Effects
         public override string Name => "Scp914Effects";
         public override string Author => "Thunder";
         public override Version Version => new Version(1, 0, 3);
-        public override Version RequiredExiledVersion => new Version(2, 8, 0);
+        public override Version RequiredExiledVersion => new Version(4, 2, 0);
         public override PluginPriority Priority => PluginPriority.High;
     }
 }
